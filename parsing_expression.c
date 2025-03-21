@@ -179,3 +179,87 @@ void prefixToInfix() {
     printf("Ekspresi Infix : %s\n", pop(&stack));
     end();
 }
+
+// Prefix to Postfix
+void prefixToPostfix() {
+    char exp[MAX];
+    Stack stack; initStack(&stack);
+    printf("Masukkan ekspresi prefix : ");
+    fgets(exp, MAX, stdin);
+    exp[strcspn(exp, "\n")] = 0;
+    removeSpaces(exp);
+    int len = strlen(exp);
+
+    for (int i = len - 1; i >= 0; i--) {
+        if (isalnum(exp[i])) { char str[2] = {exp[i], '\0'}; push(&stack, str); }
+        else {
+            char op1[MAX], op2[MAX], res[MAX];
+            strcpy(op1, pop(&stack)); 
+            strcpy(op2, pop(&stack));
+            snprintf(res, MAX, "%s%s%c", op1, op2, exp[i]);
+            push(&stack, res);
+        }
+    }
+    printf("Ekspresi Postfix : %s\n", pop(&stack));
+    end();
+}
+
+// Postfix to Prefix
+void postfixToPrefix() {
+    char exp[MAX];
+    Stack stack; 
+    initStack(&stack);
+
+    printf("Masukkan ekspresi postfix: ");
+    fgets(exp, MAX, stdin);
+    exp[strcspn(exp, "\n")] = 0;
+    removeSpaces(exp);
+    int len = strlen(exp);
+
+    for (int i = 0; i < len; i++) {
+        if (isalnum(exp[i])) { 
+            char str[2] = {exp[i], '\0'};  
+            push(&stack, str);  
+        } else {
+            char op1[MAX], op2[MAX], res[MAX];
+            strcpy(op2, pop(&stack)); 
+            strcpy(op1, pop(&stack));
+            snprintf(res, MAX, "%c%s%s", exp[i], op1, op2);
+            push(&stack, res);
+        }
+    }
+    printf("Ekspresi Prefix : %s\n", pop(&stack));
+    end();
+}
+
+// Main menu
+int main() {
+    int choice;
+    while (1) {
+        printf("\nKONVERSI EKSPRESI ARITMATIKA\n");
+        printf("\n1. Infix to Postfix\n");
+        printf("2. Postfix to Infix\n");
+        printf("3. Infix to Prefix\n");
+        printf("4. Prefix to Infix\n");
+        printf("5. Prefix to Postfix\n");
+        printf("6. Postfix to Prefix\n");
+        printf("7. Quit\n");
+
+        printf("\nMasukkan Pilihan: ");
+        scanf("%d", &choice);
+        getchar();
+        clear();
+
+        switch (choice) {
+            case 1: infixToPostfix(); break;
+            case 2: postfixToInfix(); break;
+            case 3: infixToPrefix(); break;
+            case 4: prefixToInfix(); break;
+            case 5: prefixToPostfix(); break;
+            case 6: postfixToPrefix(); break;
+            case 7: exit(0);
+            default: printf("Invalid choice\n");
+        }
+    }
+    return 0;
+}
